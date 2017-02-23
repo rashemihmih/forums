@@ -1,8 +1,8 @@
 CREATE TABLE user_profile (
-  id       INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  username VARCHAR(50)        NOT NULL,
-  email    VARCHAR(50)        NOT NULL UNIQUE KEY,
-  about    TEXT
+  id     INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  login  VARCHAR(50)        NOT NULL UNIQUE KEY,
+  passwd VARCHAR(80)        NOT NULL,
+  about  TEXT
 )
   DEFAULT CHARSET = utf8;
 
@@ -49,17 +49,6 @@ CREATE TABLE post (
   FOREIGN KEY (thread_id) REFERENCES thread (id)
     ON DELETE CASCADE,
   KEY (thread_id, creation_time)
-)
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE following (
-  follower INT NOT NULL,
-  followee INT NOT NULL,
-  UNIQUE KEY (follower, followee),
-  FOREIGN KEY (follower) REFERENCES user_profile (id)
-    ON DELETE CASCADE,
-  FOREIGN KEY (followee) REFERENCES user_profile (id)
-    ON DELETE CASCADE
 )
   DEFAULT CHARSET = utf8;
 
