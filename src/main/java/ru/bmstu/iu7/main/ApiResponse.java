@@ -2,19 +2,19 @@ package ru.bmstu.iu7.main;
 
 import org.springframework.http.ResponseEntity;
 
-public class Response {
+public class ApiResponse {
     private int code;
     private Object content;
 
-    public Response() {
+    public ApiResponse() {
     }
 
-    public Response(int code, Object content) {
+    public ApiResponse(int code, Object content) {
         this.code = code;
         this.content = content;
     }
 
-    public Response(ResponseCode responseCode) {
+    public ApiResponse(ResponseCode responseCode) {
         this(responseCode.getCode(), responseCode.getMessage());
     }
 
@@ -35,22 +35,22 @@ public class Response {
     }
 
     public static ResponseEntity ok(Object content) {
-        return ResponseEntity.ok(new Response(ResponseCode.OK.getCode(), content));
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.OK.getCode(), content));
     }
 
     public static ResponseEntity parameterMissing() {
-        return ResponseEntity.ok(new Response(ResponseCode.PARAMETER_MISSING));
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.PARAMETER_MISSING));
     }
 
     public static ResponseEntity authError() {
-        return ResponseEntity.ok(new Response(ResponseCode.AUTH_ERROR));
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.AUTH_ERROR));
     }
 
     public static ResponseEntity duplicateUser() {
-        return ResponseEntity.ok(new Response(ResponseCode.DUPLICATE_USER));
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.DUPLICATE_USER));
     }
 
     public static ResponseEntity dbError() {
-        return ResponseEntity.ok(new Response(ResponseCode.DB_ERROR));
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.DB_ERROR));
     }
 }
