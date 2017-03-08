@@ -1,6 +1,5 @@
 package ru.bmstu.iu7.dao.forum;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.bmstu.iu7.dao.BaseDao;

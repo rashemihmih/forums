@@ -34,6 +34,10 @@ public class ApiResponse {
         this.content = content;
     }
 
+    public static ResponseEntity ok() {
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.OK));
+    }
+
     public static ResponseEntity ok(Object content) {
         return ResponseEntity.ok(new ApiResponse(ResponseCode.OK.getCode(), content));
     }

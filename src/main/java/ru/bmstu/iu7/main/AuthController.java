@@ -61,7 +61,7 @@ public class AuthController {
         if (user == null) {
             return ApiResponse.authError();
         }
-        return ApiResponse.ok(user.getLogin());
+        return ApiResponse.ok(httpSessionLogin);
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.DELETE)
