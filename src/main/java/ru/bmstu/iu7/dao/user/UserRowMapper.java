@@ -8,9 +8,9 @@ import java.sql.SQLException;
 public class UserRowMapper implements DaoEntityRowMapper<User> {
     @Override
     public User mapRow(ResultSet resultSet, int i) throws SQLException {
-        final String login = resultSet.getString("login");
-        final String password = resultSet.getString("passwd");
-        final String about = resultSet.getString("about");
-        return new User(login, password, about);
+        int id = resultSet.getInt("id");
+        String login = resultSet.getString("login");
+        String password = resultSet.getString("passwd");
+        return new User(id, login, password);
     }
 }

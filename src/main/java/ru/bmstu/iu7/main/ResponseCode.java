@@ -4,7 +4,8 @@ public enum  ResponseCode {
     OK(0, "OK"),
     PARAMETER_MISSING(1, "Required parameter is missing"),
     AUTH_ERROR(2, "Authorization error"),
-    DUPLICATE_USER(3, "User is already registered"),
+    DUPLICATE_ENTRY(3, "Duplicate entry"),
+    ENTRY_NOT_FOUND(4, "Entry not found"),
     DB_ERROR(8, "Error querying database");
 
     private int code;

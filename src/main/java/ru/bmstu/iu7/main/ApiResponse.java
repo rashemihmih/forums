@@ -46,8 +46,12 @@ public class ApiResponse {
         return ResponseEntity.ok(new ApiResponse(ResponseCode.AUTH_ERROR));
     }
 
-    public static ResponseEntity duplicateUser() {
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.DUPLICATE_USER));
+    public static ResponseEntity duplicateEntry() {
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.DUPLICATE_ENTRY));
+    }
+
+    public static ResponseEntity entryNotFound() {
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.ENTRY_NOT_FOUND));
     }
 
     public static ResponseEntity dbError() {

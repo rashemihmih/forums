@@ -1,17 +1,13 @@
 CREATE TABLE user_profile (
   id     INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   login  VARCHAR(50)        NOT NULL UNIQUE KEY,
-  passwd VARCHAR(80)        NOT NULL,
-  about  TEXT
+  passwd VARCHAR(80)        NOT NULL
 )
   DEFAULT CHARSET = utf8;
 
 CREATE TABLE forum (
-  id      INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  name    VARCHAR(50)        NOT NULL UNIQUE KEY,
-  user_id INT                NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user_profile (id)
-    ON DELETE CASCADE
+  id    INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  title VARCHAR(50)        NOT NULL UNIQUE KEY
 )
   DEFAULT CHARSET = utf8;
 
@@ -73,3 +69,15 @@ CREATE TABLE post_likes (
     ON DELETE CASCADE
 )
   DEFAULT CHARSET = utf8;
+
+CREATE TABLE admin (
+  id     INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+  login  VARCHAR(50)        NOT NULL UNIQUE KEY,
+  passwd VARCHAR(130)       NOT NULL
+)
+  DEFAULT CHARSET = utf8;
+
+CREATE TRIGGER hash_password
+BEFORE INSERT ON admin
+FOR EACH ROW
+  SET NEW.passwd = sha2(NEW.passwd, 512);

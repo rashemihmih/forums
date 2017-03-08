@@ -5,9 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import ru.bmstu.iu7.dao.user.UserDao;
 import ru.bmstu.iu7.dao.user.User;
-import ru.bmstu.iu7.dao.exception.UserAlreadyExistsException;
+import ru.bmstu.iu7.dao.user.UserDao;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,28 +26,24 @@ public class AuthController {
 
     @RequestMapping(path = "/user", method = RequestMethod.POST)
     public ResponseEntity signup(@RequestBody Request request, HttpSession httpSession) {
-        final String login = request.getLogin();
-        final String password = request.getPassword();
+        String login = request.getLogin();
+        String password = request.getPassword();
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ApiResponse.parameterMissing();
         }
-        try {
-            userDao.create(new User(login, passwordEncoder.encode(password)));
-        } catch (UserAlreadyExistsException e) {
-            return ApiResponse.duplicateUser();
-        }
+        userDao.create(new User(login, passwordEncoder.encode(password)));
         httpSession.setAttribute(HTTP_SESSION_LOGIN_ATTR, login);
         return ApiResponse.ok(login);
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.POST)
     public ResponseEntity auth(@RequestBody Request request, HttpSession httpSession) {
-        final String login = request.getLogin();
-        final String password = request.getPassword();
+        String login = request.getLogin();
+        String password = request.getPassword();
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ApiResponse.parameterMissing();
         }
-        final User user = userDao.getByLogin(login);
+        User user = userDao.getByLogin(login);
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             return ApiResponse.authError();
         }
@@ -58,11 +53,11 @@ public class AuthController {
 
     @RequestMapping(path = "/session", method = RequestMethod.GET)
     public ResponseEntity sessionAuth(HttpSession httpSession) {
-        final Object httpSessionLogin = httpSession.getAttribute(HTTP_SESSION_LOGIN_ATTR);
+        Object httpSessionLogin = httpSession.getAttribute(HTTP_SESSION_LOGIN_ATTR);
         if (httpSessionLogin == null) {
             return ApiResponse.authError();
         }
-        final User user = userDao.getByLogin(httpSessionLogin.toString());
+        User user = userDao.getByLogin(httpSessionLogin.toString());
         if (user == null) {
             return ApiResponse.authError();
         }
@@ -71,7 +66,7 @@ public class AuthController {
 
     @RequestMapping(path = "/session", method = RequestMethod.DELETE)
     public ResponseEntity logout(HttpSession httpSession) {
-        final Object httpSessionLogin = httpSession.getAttribute(HTTP_SESSION_LOGIN_ATTR);
+        Object httpSessionLogin = httpSession.getAttribute(HTTP_SESSION_LOGIN_ATTR);
         if (httpSessionLogin == null) {
             return ApiResponse.authError();
         }

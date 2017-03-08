@@ -3,6 +3,7 @@ package ru.bmstu.iu7.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
@@ -14,5 +15,10 @@ public class ExceptionHandler {
     public ResponseEntity handleDataAccessException(DataAccessException e) {
         logger.error("Exception: ", e);
         return ApiResponse.dbError();
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity handleDuplicateKeyException() {
+        return ApiResponse.duplicateEntry();
     }
 }
