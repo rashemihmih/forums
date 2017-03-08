@@ -1,8 +1,8 @@
 package ru.bmstu.iu7.dao.user;
 
-import ru.bmstu.iu7.dao.BaseDaoEntity;
+import ru.bmstu.iu7.dao.DaoEntity;
 
-public class User implements BaseDaoEntity {
+public class User implements DaoEntity {
     private String login;
     private String password;
     private String about;
@@ -16,6 +16,7 @@ public class User implements BaseDaoEntity {
     public User(String login, String password) {
         this.login = login;
         this.password = password;
+        about = "";
     }
 
     public String getLogin() {
