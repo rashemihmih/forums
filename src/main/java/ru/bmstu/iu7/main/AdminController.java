@@ -17,19 +17,20 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping(path = "/admin")
 public class AdminController {
-    private static final String HTTP_SESSION_ADMIN_ATTR = "admin";
+    private final SessionService sessionService;
     private final AdminDao adminDao;
     private final UserDao userDao;
     private final ForumDao forumDao;
 
-    public AdminController(AdminDao adminDao, UserDao userDao, ForumDao forumDao) {
+    public AdminController(SessionService sessionService, AdminDao adminDao, UserDao userDao, ForumDao forumDao) {
+        this.sessionService = sessionService;
         this.adminDao = adminDao;
         this.userDao = userDao;
         this.forumDao = forumDao;
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.POST)
-    public ResponseEntity auth(@RequestBody AuthRequest request, HttpSession httpSession) {
+    public ResponseEntity auth(@RequestBody AuthRequest request, HttpSession session) {
         String login = request.getLogin();
         String password = request.getPassword();
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
@@ -39,46 +40,33 @@ public class AdminController {
         if (admin == null || !password.equals(admin.getPassword())) {
             return ApiResponse.authError();
         }
-        httpSession.setAttribute(HTTP_SESSION_ADMIN_ATTR, login);
+        sessionService.bindAdmin(session, login);
         return ApiResponse.ok(login);
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.GET)
-    public ResponseEntity sessionAuth(HttpSession httpSession) {
-        Object adminAttr = httpSession.getAttribute(HTTP_SESSION_ADMIN_ATTR);
-        if (adminAttr == null) {
-            return ApiResponse.authError();
-        }
-        Admin admin = adminDao.getByLogin(adminAttr.toString());
+    public ResponseEntity sessionAuth(HttpSession session) {
+        Admin admin = sessionService.getAdmin(session);
         if (admin == null) {
             return ApiResponse.authError();
         }
-        return ApiResponse.ok(adminAttr);
+        return ApiResponse.ok(admin.getLogin());
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.DELETE)
-    public ResponseEntity logout(HttpSession httpSession) {
-        Object adminAttr = httpSession.getAttribute(HTTP_SESSION_ADMIN_ATTR);
-        if (adminAttr == null) {
-            return ApiResponse.authError();
-        }
-        httpSession.removeAttribute(HTTP_SESSION_ADMIN_ATTR);
-        return ApiResponse.ok(adminAttr);
+    public ResponseEntity logout(HttpSession session) {
+        sessionService.unbindAdmin(session);
+        return ApiResponse.ok();
     }
 
     @Transactional
     @RequestMapping(path = "/user", method = RequestMethod.DELETE)
-    public ResponseEntity deleteUser(@RequestBody UserRequest request, HttpSession httpSession) {
+    public ResponseEntity deleteUser(@RequestBody UserRequest request, HttpSession session) {
         String login = request.getLogin();
         if (StringUtils.isEmpty(login)) {
             return ApiResponse.parameterMissing();
         }
-        Object adminAttr = httpSession.getAttribute(HTTP_SESSION_ADMIN_ATTR);
-        if (adminAttr == null) {
-            return ApiResponse.authError();
-        }
-        Admin admin = adminDao.getByLogin(adminAttr.toString());
-        if (admin == null) {
+        if (!sessionService.isAdminAuthorized(session)) {
             return ApiResponse.authError();
         }
         User user = userDao.getByLogin(login);
@@ -91,17 +79,12 @@ public class AdminController {
 
     @Transactional
     @RequestMapping(path = "/forum", method = RequestMethod.POST)
-    public ResponseEntity createForum(@RequestBody ForumRequest request, HttpSession httpSession) {
+    public ResponseEntity createForum(@RequestBody ForumRequest request, HttpSession session) {
         String title = request.getTitle();
         if (StringUtils.isEmpty(title)) {
             return ApiResponse.parameterMissing();
         }
-        Object adminAttr = httpSession.getAttribute(HTTP_SESSION_ADMIN_ATTR);
-        if (adminAttr == null) {
-            return ApiResponse.authError();
-        }
-        Admin admin = adminDao.getByLogin(adminAttr.toString());
-        if (admin == null) {
+        if (!sessionService.isAdminAuthorized(session)) {
             return ApiResponse.authError();
         }
         forumDao.create(new Forum(title));
@@ -110,17 +93,12 @@ public class AdminController {
 
     @Transactional
     @RequestMapping(path = "/forum", method = RequestMethod.DELETE)
-    public ResponseEntity deleteForum(@RequestBody ForumRequest request, HttpSession httpSession) {
+    public ResponseEntity deleteForum(@RequestBody ForumRequest request, HttpSession session) {
         String title = request.getTitle();
         if (StringUtils.isEmpty(title)) {
             return ApiResponse.parameterMissing();
         }
-        Object adminAttr = httpSession.getAttribute(HTTP_SESSION_ADMIN_ATTR);
-        if (adminAttr == null) {
-            return ApiResponse.authError();
-        }
-        Admin admin = adminDao.getByLogin(adminAttr.toString());
-        if (admin == null) {
+        if (!sessionService.isAdminAuthorized(session)) {
             return ApiResponse.authError();
         }
         Forum forum = forumDao.getByTitle(title);
@@ -133,18 +111,13 @@ public class AdminController {
 
     @Transactional
     @RequestMapping(path = "/forum/rename", method = RequestMethod.POST)
-    public ResponseEntity renameForum(@RequestBody ForumRenameRequest request, HttpSession httpSession) {
+    public ResponseEntity renameForum(@RequestBody ForumRenameRequest request, HttpSession session) {
         String oldTitle = request.getOldTitle();
         String newTitle = request.getNewTitle();
         if (StringUtils.isEmpty(oldTitle) || StringUtils.isEmpty(newTitle)) {
             return ApiResponse.parameterMissing();
         }
-        Object adminAttr = httpSession.getAttribute(HTTP_SESSION_ADMIN_ATTR);
-        if (adminAttr == null) {
-            return ApiResponse.authError();
-        }
-        Admin admin = adminDao.getByLogin(adminAttr.toString());
-        if (admin == null) {
+        if (!sessionService.isAdminAuthorized(session)) {
             return ApiResponse.authError();
         }
         Forum forum = forumDao.getByTitle(oldTitle);

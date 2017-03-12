@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bmstu.iu7.dao.forum.Forum;
 import ru.bmstu.iu7.dao.forum.ForumDao;
-import ru.bmstu.iu7.dao.user.User;
-import ru.bmstu.iu7.dao.user.UserDao;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -18,23 +16,18 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/forum")
 public class ForumController {
-    private final UserDao userDao;
+    private final SessionService sessionService;
     private final ForumDao forumDao;
 
-    public ForumController(UserDao userDao, ForumDao forumDao) {
-        this.userDao = userDao;
+    public ForumController(SessionService sessionService, ForumDao forumDao) {
+        this.sessionService = sessionService;
         this.forumDao = forumDao;
     }
 
     @Transactional
     @RequestMapping(path = "/list", method = RequestMethod.GET)
-    public ResponseEntity listForums(HttpSession httpSession) {
-        Object httpSessionLogin = httpSession.getAttribute(AuthController.HTTP_SESSION_LOGIN_ATTR);
-        if (httpSessionLogin == null) {
-            return ApiResponse.authError();
-        }
-        User user = userDao.getByLogin(httpSessionLogin.toString());
-        if (user == null) {
+    public ResponseEntity listForums(HttpSession session) {
+        if (!sessionService.isUserAuthorized(session)) {
             return ApiResponse.authError();
         }
         List<Forum> forums = forumDao.list();

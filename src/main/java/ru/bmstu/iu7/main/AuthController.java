@@ -14,30 +14,31 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping(path = "/api")
 public class AuthController {
-    public static final String HTTP_SESSION_LOGIN_ATTR = "login";
+    private final SessionService sessionService;
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthController(UserDao userDao, PasswordEncoder passwordEncoder) {
+    public AuthController(SessionService sessionService, UserDao userDao, PasswordEncoder passwordEncoder) {
+        this.sessionService = sessionService;
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping(path = "/user", method = RequestMethod.POST)
-    public ResponseEntity signup(@RequestBody Request request, HttpSession httpSession) {
+    public ResponseEntity signup(@RequestBody Request request, HttpSession session) {
         String login = request.getLogin();
         String password = request.getPassword();
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ApiResponse.parameterMissing();
         }
         userDao.create(new User(login, passwordEncoder.encode(password)));
-        httpSession.setAttribute(HTTP_SESSION_LOGIN_ATTR, login);
+        sessionService.bindUser(session, login);
         return ApiResponse.ok(login);
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.POST)
-    public ResponseEntity auth(@RequestBody Request request, HttpSession httpSession) {
+    public ResponseEntity auth(@RequestBody Request request, HttpSession session) {
         String login = request.getLogin();
         String password = request.getPassword();
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
@@ -47,31 +48,23 @@ public class AuthController {
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             return ApiResponse.authError();
         }
-        httpSession.setAttribute(HTTP_SESSION_LOGIN_ATTR, login);
+        sessionService.bindUser(session, login);
         return ApiResponse.ok(login);
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.GET)
-    public ResponseEntity sessionAuth(HttpSession httpSession) {
-        Object httpSessionLogin = httpSession.getAttribute(HTTP_SESSION_LOGIN_ATTR);
-        if (httpSessionLogin == null) {
-            return ApiResponse.authError();
-        }
-        User user = userDao.getByLogin(httpSessionLogin.toString());
+    public ResponseEntity sessionAuth(HttpSession session) {
+        User user = sessionService.getUser(session);
         if (user == null) {
             return ApiResponse.authError();
         }
-        return ApiResponse.ok(httpSessionLogin);
+        return ApiResponse.ok(user.getLogin());
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.DELETE)
-    public ResponseEntity logout(HttpSession httpSession) {
-        Object httpSessionLogin = httpSession.getAttribute(HTTP_SESSION_LOGIN_ATTR);
-        if (httpSessionLogin == null) {
-            return ApiResponse.authError();
-        }
-        httpSession.removeAttribute(HTTP_SESSION_LOGIN_ATTR);
-        return ApiResponse.ok(httpSessionLogin);
+    public ResponseEntity logout(HttpSession session) {
+        sessionService.unbindUser(session);
+        return ApiResponse.ok();
     }
 
     private static final class Request {
