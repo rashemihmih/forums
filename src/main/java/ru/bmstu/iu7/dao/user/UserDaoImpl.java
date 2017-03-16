@@ -29,12 +29,15 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao {
     }
 
     @Override
-    public User getByLogin(String login) {
+    public User get(int id) {
+        List<User> list = jdbcTemplate.query("SELECT * FROM user_profile WHERE id = ?;", new UserRowMapper(), id);
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    @Override
+    public User get(String login) {
         List<User> list = jdbcTemplate.query("SELECT * FROM user_profile WHERE login = ?;",
                 new UserRowMapper(), login);
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 }

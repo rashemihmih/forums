@@ -42,8 +42,8 @@ public class ApiResponse {
         return ResponseEntity.ok(new ApiResponse(ResponseCode.OK.getCode(), content));
     }
 
-    public static ResponseEntity parameterMissing() {
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.PARAMETER_MISSING));
+    public static ResponseEntity incorrectRequest() {
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.INCORRECT_REQUEST));
     }
 
     public static ResponseEntity authError() {

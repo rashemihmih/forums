@@ -30,7 +30,7 @@ public class AuthController {
         String login = request.getLogin();
         String password = request.getPassword();
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
-            return ApiResponse.parameterMissing();
+            return ApiResponse.incorrectRequest();
         }
         userDao.create(new User(login, passwordEncoder.encode(password)));
         sessionService.bindUser(session, login);
@@ -42,9 +42,9 @@ public class AuthController {
         String login = request.getLogin();
         String password = request.getPassword();
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
-            return ApiResponse.parameterMissing();
+            return ApiResponse.incorrectRequest();
         }
-        User user = userDao.getByLogin(login);
+        User user = userDao.get(login);
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             return ApiResponse.authError();
         }

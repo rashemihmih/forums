@@ -9,6 +9,8 @@ import ru.bmstu.iu7.dao.admin.Admin;
 import ru.bmstu.iu7.dao.admin.AdminDao;
 import ru.bmstu.iu7.dao.forum.Forum;
 import ru.bmstu.iu7.dao.forum.ForumDao;
+import ru.bmstu.iu7.dao.thread.Thread;
+import ru.bmstu.iu7.dao.thread.ThreadDao;
 import ru.bmstu.iu7.dao.user.User;
 import ru.bmstu.iu7.dao.user.UserDao;
 
@@ -23,14 +25,16 @@ public class AdminController {
     private final AdminDao adminDao;
     private final UserDao userDao;
     private final ForumDao forumDao;
+    private final ThreadDao threadDao;
 
     public AdminController(PasswordEncoder passwordEncoder, SessionService sessionService, AdminDao adminDao,
-                           UserDao userDao, ForumDao forumDao) {
+                           UserDao userDao, ForumDao forumDao, ThreadDao threadDao) {
         this.passwordEncoder = passwordEncoder;
         this.sessionService = sessionService;
         this.adminDao = adminDao;
         this.userDao = userDao;
         this.forumDao = forumDao;
+        this.threadDao = threadDao;
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.POST)
@@ -38,9 +42,9 @@ public class AdminController {
         String login = request.getLogin();
         String password = request.getPassword();
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
-            return ApiResponse.parameterMissing();
+            return ApiResponse.incorrectRequest();
         }
-        Admin admin = adminDao.getByLogin(login);
+        Admin admin = adminDao.get(login);
         if (admin == null || !passwordEncoder.matches(password, admin.getPassword())) {
             return ApiResponse.authError();
         }
@@ -68,12 +72,12 @@ public class AdminController {
     public ResponseEntity deleteUser(@RequestBody UserRequest request, HttpSession session) {
         String login = request.getLogin();
         if (StringUtils.isEmpty(login)) {
-            return ApiResponse.parameterMissing();
+            return ApiResponse.incorrectRequest();
         }
         if (!sessionService.isAdminAuthorized(session)) {
             return ApiResponse.authError();
         }
-        User user = userDao.getByLogin(login);
+        User user = userDao.get(login);
         if (user == null) {
             return ApiResponse.entryNotFound();
         }
@@ -86,7 +90,7 @@ public class AdminController {
     public ResponseEntity createForum(@RequestBody ForumRequest request, HttpSession session) {
         String title = request.getTitle();
         if (StringUtils.isEmpty(title)) {
-            return ApiResponse.parameterMissing();
+            return ApiResponse.incorrectRequest();
         }
         if (!sessionService.isAdminAuthorized(session)) {
             return ApiResponse.authError();
@@ -100,12 +104,12 @@ public class AdminController {
     public ResponseEntity deleteForum(@RequestBody ForumRequest request, HttpSession session) {
         String title = request.getTitle();
         if (StringUtils.isEmpty(title)) {
-            return ApiResponse.parameterMissing();
+            return ApiResponse.incorrectRequest();
         }
         if (!sessionService.isAdminAuthorized(session)) {
             return ApiResponse.authError();
         }
-        Forum forum = forumDao.getByTitle(title);
+        Forum forum = forumDao.get(title);
         if (forum == null) {
             return ApiResponse.entryNotFound();
         }
@@ -114,17 +118,31 @@ public class AdminController {
     }
 
     @Transactional
+    @RequestMapping(path = "/thread", method = RequestMethod.DELETE)
+    public ResponseEntity deleteThread(@RequestBody IdRequest request, HttpSession session) {
+        if (!sessionService.isAdminAuthorized(session)) {
+            return ApiResponse.authError();
+        }
+        Thread thread = threadDao.get(request.getId());
+        if (thread == null) {
+            return ApiResponse.entryNotFound();
+        }
+        threadDao.delete(thread);
+        return ApiResponse.ok(thread);
+    }
+
+    @Transactional
     @RequestMapping(path = "/forum/rename", method = RequestMethod.POST)
     public ResponseEntity renameForum(@RequestBody ForumRenameRequest request, HttpSession session) {
         String oldTitle = request.getOldTitle();
         String newTitle = request.getNewTitle();
         if (StringUtils.isEmpty(oldTitle) || StringUtils.isEmpty(newTitle)) {
-            return ApiResponse.parameterMissing();
+            return ApiResponse.incorrectRequest();
         }
         if (!sessionService.isAdminAuthorized(session)) {
             return ApiResponse.authError();
         }
-        Forum forum = forumDao.getByTitle(oldTitle);
+        Forum forum = forumDao.get(oldTitle);
         if (forum == null) {
             return ApiResponse.entryNotFound();
         }
@@ -211,4 +229,18 @@ public class AdminController {
         }
     }
 
+    private static final class IdRequest {
+        private int id;
+
+        IdRequest() {
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+    }
 }

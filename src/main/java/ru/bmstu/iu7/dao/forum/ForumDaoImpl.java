@@ -28,7 +28,16 @@ public class ForumDaoImpl extends BaseDao<Forum> implements ForumDao {
     }
 
     @Override
-    public Forum getByTitle(String title) {
+    public Forum get(int id) {
+        List<Forum> list = jdbcTemplate.query("SELECT * FROM forum WHERE id = ?;", new ForumRowMapper(), id);
+        if (list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
+    public Forum get(String title) {
         List<Forum> list = jdbcTemplate.query("SELECT * FROM forum WHERE title = ?;", new ForumRowMapper(), title);
         if (list.isEmpty()) {
             return null;

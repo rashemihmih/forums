@@ -25,7 +25,7 @@ public class SessionService {
         if (login == null) {
             return null;
         }
-        return userDao.getByLogin(login.toString());
+        return userDao.get(login.toString());
     }
 
     public boolean isUserAuthorized(HttpSession session) {
@@ -45,7 +45,7 @@ public class SessionService {
         if (login == null) {
             return null;
         }
-        return adminDao.getByLogin(login.toString());
+        return adminDao.get(login.toString());
     }
 
     public boolean isAdminAuthorized(HttpSession session) {

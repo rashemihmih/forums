@@ -2,7 +2,7 @@ package ru.bmstu.iu7.main;
 
 public enum  ResponseCode {
     OK(0, "OK"),
-    PARAMETER_MISSING(1, "В запросе недостаточно параметров"),
+    INCORRECT_REQUEST(1, "Некорректный запрос"),
     AUTH_ERROR(2, "Ошибка авторизации"),
     DUPLICATE_ENTRY(3, "Запись уже существует"),
     ENTRY_NOT_FOUND(4, "Запись не найдена"),
