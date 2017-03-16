@@ -38,6 +38,6 @@ public class ForumDaoImpl extends BaseDao<Forum> implements ForumDao {
 
     @Override
     public List<Forum> list() {
-        return jdbcTemplate.query("SELECT * FROM forum", new ForumRowMapper());
+        return jdbcTemplate.query("SELECT * FROM forum ORDER BY id;", new ForumRowMapper());
     }
 }

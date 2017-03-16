@@ -73,11 +73,6 @@ CREATE TABLE post_likes (
 CREATE TABLE admin (
   id     INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   login  VARCHAR(50)        NOT NULL UNIQUE KEY,
-  passwd VARCHAR(130)       NOT NULL
+  passwd VARCHAR(80)       NOT NULL
 )
   DEFAULT CHARSET = utf8;
-
-CREATE TRIGGER hash_password
-BEFORE INSERT ON admin
-FOR EACH ROW
-  SET NEW.passwd = sha2(NEW.passwd, 512);

@@ -14,7 +14,8 @@ public class AdminDaoImpl extends BaseDao<Admin> implements AdminDao {
 
     @Override
     public void create(Admin entity) {
-        throw new UnsupportedOperationException();
+        jdbcTemplate.update("INSERT INTO admin (login, passwd) VALUES (?, ?);", entity.getLogin(),
+                entity.getPassword());
     }
 
     @Override

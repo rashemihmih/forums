@@ -1,6 +1,7 @@
 package ru.bmstu.iu7.main;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +18,15 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping(path = "/admin")
 public class AdminController {
+    private final PasswordEncoder passwordEncoder;
     private final SessionService sessionService;
     private final AdminDao adminDao;
     private final UserDao userDao;
     private final ForumDao forumDao;
 
-    public AdminController(SessionService sessionService, AdminDao adminDao, UserDao userDao, ForumDao forumDao) {
+    public AdminController(PasswordEncoder passwordEncoder, SessionService sessionService, AdminDao adminDao,
+                           UserDao userDao, ForumDao forumDao) {
+        this.passwordEncoder = passwordEncoder;
         this.sessionService = sessionService;
         this.adminDao = adminDao;
         this.userDao = userDao;
@@ -37,7 +41,7 @@ public class AdminController {
             return ApiResponse.parameterMissing();
         }
         Admin admin = adminDao.getByLogin(login);
-        if (admin == null || !password.equals(admin.getPassword())) {
+        if (admin == null || !passwordEncoder.matches(password, admin.getPassword())) {
             return ApiResponse.authError();
         }
         sessionService.bindAdmin(session, login);
