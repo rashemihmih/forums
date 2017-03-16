@@ -18,8 +18,6 @@ CREATE TABLE thread (
   message       TEXT               NOT NULL,
   user_id       INT                NOT NULL,
   creation_time DATETIME           NOT NULL,
-  posts         INT                NOT NULL DEFAULT 0,
-  likes         INT                NOT NULL DEFAULT 0,
   FOREIGN KEY (forum_id) REFERENCES forum (id)
     ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES user_profile (id)
@@ -37,7 +35,6 @@ CREATE TABLE post (
   thread_id     INT                NOT NULL,
   parent        INT                NULL     DEFAULT NULL,
   creation_time DATETIME           NOT NULL,
-  likes         INT                NOT NULL DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES user_profile (id)
     ON DELETE CASCADE,
   FOREIGN KEY (forum_id) REFERENCES forum (id)
@@ -45,28 +42,6 @@ CREATE TABLE post (
   FOREIGN KEY (thread_id) REFERENCES thread (id)
     ON DELETE CASCADE,
   KEY (thread_id, creation_time)
-)
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE thread_likes (
-  user_id   INT NOT NULL,
-  thread_id INT NOT NULL,
-  UNIQUE KEY (user_id, thread_id),
-  FOREIGN KEY (user_id) REFERENCES user_profile (id)
-    ON DELETE CASCADE,
-  FOREIGN KEY (thread_id) REFERENCES thread (id)
-    ON DELETE CASCADE
-)
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE post_likes (
-  user_id INT NOT NULL,
-  post_id INT NOT NULL,
-  UNIQUE KEY (user_id, post_id),
-  FOREIGN KEY (user_id) REFERENCES user_profile (id)
-    ON DELETE CASCADE,
-  FOREIGN KEY (post_id) REFERENCES post (id)
-    ON DELETE CASCADE
 )
   DEFAULT CHARSET = utf8;
 
