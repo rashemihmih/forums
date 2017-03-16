@@ -31,18 +31,12 @@ public class AdminDaoImpl extends BaseDao<Admin> implements AdminDao {
     @Override
     public Admin get(int id) {
         List<Admin> list = jdbcTemplate.query("SELECT * FROM admin WHERE id = ?;", new AdminRowMapper(), id);
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
     public Admin get(String login) {
         List<Admin> list = jdbcTemplate.query("SELECT * FROM admin WHERE login = ?;", new AdminRowMapper(), login);
-        if (list.isEmpty()) {
-            return null;
-        }
-        return list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 }
