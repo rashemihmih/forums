@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main;
+package ru.bmstu.iu7.main.controller.common;
 
 public enum  ResponseCode {
     OK(0, "OK"),

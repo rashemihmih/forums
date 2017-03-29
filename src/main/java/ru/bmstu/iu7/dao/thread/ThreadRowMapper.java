@@ -16,6 +16,7 @@ public class ThreadRowMapper implements DaoEntityRowMapper<Thread> {
         String message = resultSet.getString("message");
         int userId = resultSet.getInt("user_id");
         Date creationTime = resultSet.getTimestamp("creation_time");
-        return new Thread(id, forumId, title, message, userId, creationTime);
+        Date lastUpdate = resultSet.getTimestamp("last_update");
+        return new Thread(id, forumId, title, message, userId, creationTime, lastUpdate);
     }
 }

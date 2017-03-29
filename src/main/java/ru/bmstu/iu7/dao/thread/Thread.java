@@ -11,22 +11,25 @@ public class Thread implements DaoEntity {
     private String message;
     private int userId;
     private Date creationTime;
+    private Date lastUpdate;
 
-    public Thread(int id, int forumId, String title, String message, int userId, Date creationTime) {
+    public Thread(int id, int forumId, String title, String message, int userId, Date creationTime, Date lastUpdate) {
         this.id = id;
         this.forumId = forumId;
         this.title = title;
         this.message = message;
         this.userId = userId;
         this.creationTime = creationTime;
+        this.lastUpdate = lastUpdate;
     }
 
-    public Thread(int forumId, String title, String message, int userId, Date creationTime) {
+    public Thread(int forumId, String title, String message, int userId, Date creationTime, Date lastUpdate) {
         this.forumId = forumId;
         this.title = title;
         this.message = message;
         this.userId = userId;
         this.creationTime = creationTime;
+        this.lastUpdate = lastUpdate;
     }
 
     public int getId() {
@@ -75,5 +78,13 @@ public class Thread implements DaoEntity {
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

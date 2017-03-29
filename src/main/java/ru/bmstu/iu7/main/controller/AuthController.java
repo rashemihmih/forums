@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main;
+package ru.bmstu.iu7.main.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.bmstu.iu7.dao.user.User;
 import ru.bmstu.iu7.dao.user.UserDao;
+import ru.bmstu.iu7.main.controller.common.ApiResponse;
+import ru.bmstu.iu7.main.controller.common.SessionService;
 
 import javax.servlet.http.HttpSession;
 

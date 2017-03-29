@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main;
+package ru.bmstu.iu7.main.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,8 +9,14 @@ import ru.bmstu.iu7.dao.forum.ForumDao;
 import ru.bmstu.iu7.dao.thread.Thread;
 import ru.bmstu.iu7.dao.thread.ThreadDao;
 import ru.bmstu.iu7.dao.user.User;
+import ru.bmstu.iu7.dao.user.UserDao;
+import ru.bmstu.iu7.main.controller.common.ApiResponse;
+import ru.bmstu.iu7.main.controller.common.SessionService;
+import ru.bmstu.iu7.main.controller.common.ThreadResponse;
+import ru.bmstu.iu7.main.utils.DateUtils;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,11 +27,30 @@ public class ThreadController {
     private final SessionService sessionService;
     private final ThreadDao threadDao;
     private final ForumDao forumDao;
+    private final UserDao userDao;
 
-    public ThreadController(SessionService sessionService, ThreadDao threadDao, ForumDao forumDao) {
+    public ThreadController(SessionService sessionService, ThreadDao threadDao, ForumDao forumDao, UserDao userDao) {
         this.sessionService = sessionService;
         this.threadDao = threadDao;
         this.forumDao = forumDao;
+        this.userDao = userDao;
+    }
+
+    @Transactional
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity getThread(@RequestParam int id, HttpSession session) {
+        if (!sessionService.isUserAuthorized(session)) {
+            return ApiResponse.authError();
+        }
+        Thread thread = threadDao.get(id);
+        if (thread == null) {
+            return ApiResponse.entryNotFound();
+        }
+        String user = userDao.get(thread.getUserId()).getLogin();
+        String forum = forumDao.get(thread.getForumId()).getTitle();
+        ThreadResponse response = new ThreadResponse(id, forum, thread.getTitle(), thread.getMessage(), user,
+                DateUtils.format(thread.getCreationTime()), DateUtils.format(thread.getLastUpdate()));
+        return ApiResponse.ok(response);
     }
 
     @Transactional
@@ -34,9 +59,7 @@ public class ThreadController {
         String forum = request.getForum();
         String title = request.getTitle();
         String message = request.getMessage();
-        String creationTime = request.getCreationTime();
-        if (StringUtils.isEmpty(forum) || StringUtils.isEmpty(title) || StringUtils.isEmpty(message) ||
-                StringUtils.isEmpty(creationTime)) {
+        if (StringUtils.isEmpty(forum) || StringUtils.isEmpty(title) || StringUtils.isEmpty(message)) {
             return ApiResponse.incorrectRequest();
         }
         User user = sessionService.getUser(session);
@@ -47,19 +70,19 @@ public class ThreadController {
         if (forumEntity == null) {
             return ApiResponse.entryNotFound();
         }
-        Date date = DateUtils.parseDate(creationTime);
-        if (date == null) {
-            return ApiResponse.incorrectRequest();
-        }
-        Thread thread = new Thread(forumEntity.getId(), title, message, user.getId(), date);
+        Date date = new Date();
+        Thread thread = new Thread(forumEntity.getId(), title, message, user.getId(), date, date);
         threadDao.create(thread);
-        return ApiResponse.ok(thread);
+        ThreadResponse response = new ThreadResponse(thread.getId(), forum, title, message, user.getLogin(),
+                DateUtils.format(date), DateUtils.format(date));
+        return ApiResponse.ok(response);
     }
 
     @Transactional
     @RequestMapping(path = "/list", method = RequestMethod.GET)
-    public ResponseEntity listThreads(@RequestParam String forum, HttpSession session) {
-        if (StringUtils.isEmpty(forum)) {
+    public ResponseEntity listThreads(@RequestParam String forum, @RequestParam int offset, @RequestParam int limit,
+                                      HttpSession session) {
+        if (StringUtils.isEmpty(forum) || offset < 0 || limit <= 0) {
             return ApiResponse.incorrectRequest();
         }
         if (!sessionService.isUserAuthorized(session)) {
@@ -69,15 +92,19 @@ public class ThreadController {
         if (forumEntity == null) {
             return ApiResponse.entryNotFound();
         }
-        List<Thread> list = threadDao.list(forumEntity);
-        return ApiResponse.ok(list.toArray());
+        List<ThreadResponse> responses = new ArrayList<>();
+        for (Thread thread : threadDao.list(forumEntity, offset, limit)) {
+            String user = userDao.get(thread.getUserId()).getLogin();
+            responses.add(new ThreadResponse(thread.getId(), forum, thread.getTitle(), thread.getMessage(), user,
+                    DateUtils.format(thread.getCreationTime()), DateUtils.format(thread.getLastUpdate())));
+        }
+        return ApiResponse.ok(responses.toArray());
     }
 
     private static final class ThreadCreateRequest {
         private String forum;
         private String title;
         private String message;
-        private String creationTime;
 
         ThreadCreateRequest() {
         }
@@ -104,14 +131,6 @@ public class ThreadController {
 
         public void setMessage(String message) {
             this.message = message;
-        }
-
-        public String getCreationTime() {
-            return creationTime;
-        }
-
-        public void setCreationTime(String creationTime) {
-            this.creationTime = creationTime;
         }
     }
 }

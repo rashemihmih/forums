@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main;
+package ru.bmstu.iu7.main.controller.common;
 
 import org.springframework.http.ResponseEntity;
 

@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main;
+package ru.bmstu.iu7.main.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,10 +9,14 @@ import ru.bmstu.iu7.dao.admin.Admin;
 import ru.bmstu.iu7.dao.admin.AdminDao;
 import ru.bmstu.iu7.dao.forum.Forum;
 import ru.bmstu.iu7.dao.forum.ForumDao;
+import ru.bmstu.iu7.dao.post.Post;
+import ru.bmstu.iu7.dao.post.PostDao;
 import ru.bmstu.iu7.dao.thread.Thread;
 import ru.bmstu.iu7.dao.thread.ThreadDao;
 import ru.bmstu.iu7.dao.user.User;
 import ru.bmstu.iu7.dao.user.UserDao;
+import ru.bmstu.iu7.main.controller.common.ApiResponse;
+import ru.bmstu.iu7.main.controller.common.SessionService;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,15 +30,17 @@ public class AdminController {
     private final UserDao userDao;
     private final ForumDao forumDao;
     private final ThreadDao threadDao;
+    private final PostDao postDao;
 
     public AdminController(PasswordEncoder passwordEncoder, SessionService sessionService, AdminDao adminDao,
-                           UserDao userDao, ForumDao forumDao, ThreadDao threadDao) {
+                           UserDao userDao, ForumDao forumDao, ThreadDao threadDao, PostDao postDao) {
         this.passwordEncoder = passwordEncoder;
         this.sessionService = sessionService;
         this.adminDao = adminDao;
         this.userDao = userDao;
         this.forumDao = forumDao;
         this.threadDao = threadDao;
+        this.postDao = postDao;
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.POST)
@@ -129,6 +135,20 @@ public class AdminController {
         }
         threadDao.delete(thread);
         return ApiResponse.ok(thread);
+    }
+
+    @Transactional
+    @RequestMapping(path = "/post", method = RequestMethod.DELETE)
+    public ResponseEntity deletePost(@RequestBody IdRequest request, HttpSession session) {
+        if (!sessionService.isAdminAuthorized(session)) {
+            return ApiResponse.authError();
+        }
+        Post post = postDao.get(request.getId());
+        if (post == null) {
+            return ApiResponse.entryNotFound();
+        }
+        postDao.delete(post);
+        return ApiResponse.ok(post);
     }
 
     @Transactional

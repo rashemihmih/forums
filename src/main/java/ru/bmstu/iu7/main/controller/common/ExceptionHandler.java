@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main;
+package ru.bmstu.iu7.main.controller.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @ControllerAdvice
@@ -14,6 +15,12 @@ public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        logger.debug("Exception: ", e);
+        return ApiResponse.incorrectRequest();
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         logger.debug("Exception: ", e);
         return ApiResponse.incorrectRequest();
     }
