@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class ExceptionHandler {
@@ -33,6 +34,12 @@ public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity handleDuplicateKeyException(DuplicateKeyException e) {
+        logger.debug("Exception: ", e);
+        return ApiResponse.duplicateEntry();
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity handleDuplicateKeyException(MethodArgumentTypeMismatchException e) {
         logger.debug("Exception: ", e);
         return ApiResponse.duplicateEntry();
     }
