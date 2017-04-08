@@ -23,6 +23,7 @@ CREATE TABLE thread (
     ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES user_profile (id)
     ON DELETE CASCADE,
+  KEY (id, last_update),
   KEY (forum_id, last_update)
 )
   DEFAULT CHARSET = utf8;
@@ -38,7 +39,7 @@ CREATE TABLE post (
     ON DELETE CASCADE,
   FOREIGN KEY (thread_id) REFERENCES thread (id)
     ON DELETE CASCADE,
-  KEY (thread_id, creation_time)
+  KEY (thread_id, id)
 )
   DEFAULT CHARSET = utf8;
 
