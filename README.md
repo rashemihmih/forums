@@ -14,6 +14,9 @@
         DELETE
         
     /forum
+        GET
+            > title
+            < {id, title}
         /list
             GET
                 < [{id, title}]

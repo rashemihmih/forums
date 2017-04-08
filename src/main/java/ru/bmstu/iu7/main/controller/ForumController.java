@@ -2,10 +2,8 @@ package ru.bmstu.iu7.main.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import ru.bmstu.iu7.dao.forum.Forum;
 import ru.bmstu.iu7.dao.forum.ForumDao;
 import ru.bmstu.iu7.main.controller.common.ApiResponse;
@@ -24,6 +22,22 @@ public class ForumController {
     public ForumController(SessionService sessionService, ForumDao forumDao) {
         this.sessionService = sessionService;
         this.forumDao = forumDao;
+    }
+
+    @Transactional
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity getForum(@RequestParam String title, HttpSession session) {
+        if (StringUtils.isEmpty(title)) {
+            return ApiResponse.incorrectRequest();
+        }
+        if (!sessionService.isUserAuthorized(session)) {
+            return ApiResponse.authError();
+        }
+        Forum forum = forumDao.get(title);
+        if (forum == null) {
+            return ApiResponse.entryNotFound();
+        }
+        return ApiResponse.ok(forum);
     }
 
     @Transactional
