@@ -56,8 +56,8 @@ public class PostDaoImpl extends BaseDao<Post> implements PostDao {
     public List<Post> list(int thread, int offset, int limit, boolean desc) {
         String order = desc ? "DESC" : "";
         return jdbcTemplate.query("SELECT * FROM post JOIN " +
-                        "(SELECT id FROM post WHERE thread_id = ? ORDER BY creation_time " + order +" LIMIT ?, ?) p " +
-                        "ON post.id = p.id ORDER BY post.creation_time " + order + ';',
+                        "(SELECT id FROM post WHERE thread_id = ? ORDER BY id " + order +" LIMIT ?, ?) p " +
+                        "ON post.id = p.id ORDER BY post.id " + order + ';',
                 new PostRowMapper(), thread, offset, limit);
     }
 }
