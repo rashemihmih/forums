@@ -56,9 +56,9 @@ public class ThreadController {
     @Transactional
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createThread(@RequestBody ThreadCreateRequest request, HttpSession session) {
-        String forum = request.getForum();
-        String title = request.getTitle();
-        String message = request.getMessage();
+        String forum = StringUtils.trimWhitespace(request.getForum());
+        String title = StringUtils.trimWhitespace(request.getTitle());
+        String message = StringUtils.trimWhitespace(request.getMessage());
         if (StringUtils.isEmpty(forum) || StringUtils.isEmpty(title) || StringUtils.isEmpty(message)) {
             return ApiResponse.incorrectRequest();
         }
@@ -82,6 +82,7 @@ public class ThreadController {
     @RequestMapping(path = "/list", method = RequestMethod.GET)
     public ResponseEntity listThreads(@RequestParam String forum, @RequestParam int offset, @RequestParam int limit,
                                       HttpSession session) {
+        forum = StringUtils.trimWhitespace(forum);
         if (StringUtils.isEmpty(forum) || offset < 0 || limit <= 0) {
             return ApiResponse.incorrectRequest();
         }

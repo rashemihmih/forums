@@ -27,6 +27,7 @@ public class ForumController {
     @Transactional
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getForum(@RequestParam String title, HttpSession session) {
+        title = StringUtils.trimWhitespace(title);
         if (StringUtils.isEmpty(title)) {
             return ApiResponse.incorrectRequest();
         }

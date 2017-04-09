@@ -29,8 +29,8 @@ public class AuthController {
 
     @RequestMapping(path = "/user", method = RequestMethod.POST)
     public ResponseEntity signup(@RequestBody Request request, HttpSession session) {
-        String login = request.getLogin();
-        String password = request.getPassword();
+        String login = StringUtils.trimWhitespace(request.getLogin());
+        String password = StringUtils.trimWhitespace(request.getPassword());
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ApiResponse.incorrectRequest();
         }
@@ -41,8 +41,8 @@ public class AuthController {
 
     @RequestMapping(path = "/session", method = RequestMethod.POST)
     public ResponseEntity auth(@RequestBody Request request, HttpSession session) {
-        String login = request.getLogin();
-        String password = request.getPassword();
+        String login = StringUtils.trimWhitespace(request.getLogin());
+        String password = StringUtils.trimWhitespace(request.getPassword());
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ApiResponse.incorrectRequest();
         }

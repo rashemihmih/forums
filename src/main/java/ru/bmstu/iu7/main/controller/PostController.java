@@ -39,7 +39,7 @@ public class PostController {
     @Transactional
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createPost(@RequestBody PostCreateRequest request, HttpSession session) {
-        String message = request.getMessage();
+        String message = StringUtils.trimWhitespace(request.getMessage());
         if (StringUtils.isEmpty(message)) {
             return ApiResponse.incorrectRequest();
         }

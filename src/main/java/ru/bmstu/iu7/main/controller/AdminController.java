@@ -45,8 +45,8 @@ public class AdminController {
 
     @RequestMapping(path = "/session", method = RequestMethod.POST)
     public ResponseEntity auth(@RequestBody AuthRequest request, HttpSession session) {
-        String login = request.getLogin();
-        String password = request.getPassword();
+        String login = StringUtils.trimWhitespace(request.getLogin());
+        String password = StringUtils.trimWhitespace(request.getPassword());
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ApiResponse.incorrectRequest();
         }
@@ -76,7 +76,7 @@ public class AdminController {
     @Transactional
     @RequestMapping(path = "/user", method = RequestMethod.DELETE)
     public ResponseEntity deleteUser(@RequestBody UserRequest request, HttpSession session) {
-        String login = request.getLogin();
+        String login = StringUtils.trimWhitespace(request.getLogin());
         if (StringUtils.isEmpty(login)) {
             return ApiResponse.incorrectRequest();
         }
@@ -94,7 +94,7 @@ public class AdminController {
     @Transactional
     @RequestMapping(path = "/forum", method = RequestMethod.POST)
     public ResponseEntity createForum(@RequestBody ForumRequest request, HttpSession session) {
-        String title = request.getTitle();
+        String title = StringUtils.trimWhitespace(request.getTitle());
         if (StringUtils.isEmpty(title)) {
             return ApiResponse.incorrectRequest();
         }
@@ -108,7 +108,7 @@ public class AdminController {
     @Transactional
     @RequestMapping(path = "/forum", method = RequestMethod.DELETE)
     public ResponseEntity deleteForum(@RequestBody ForumRequest request, HttpSession session) {
-        String title = request.getTitle();
+        String title = StringUtils.trimWhitespace(request.getTitle());
         if (StringUtils.isEmpty(title)) {
             return ApiResponse.incorrectRequest();
         }
@@ -154,8 +154,8 @@ public class AdminController {
     @Transactional
     @RequestMapping(path = "/forum/rename", method = RequestMethod.POST)
     public ResponseEntity renameForum(@RequestBody ForumRenameRequest request, HttpSession session) {
-        String oldTitle = request.getOldTitle();
-        String newTitle = request.getNewTitle();
+        String oldTitle = StringUtils.trimWhitespace(request.getOldTitle());
+        String newTitle = StringUtils.trimWhitespace(request.getNewTitle());
         if (StringUtils.isEmpty(oldTitle) || StringUtils.isEmpty(newTitle)) {
             return ApiResponse.incorrectRequest();
         }
