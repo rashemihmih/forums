@@ -71,9 +71,9 @@
     /thread
         DELETE
             > {id}
-            < {id, forumId, title, message, userId, creationTime, lastUpdate}
+            < id
             
     /post
         DELETE
             > {id}
-            < {id, userId, message, threadId, parent, creationTime}
+            < id

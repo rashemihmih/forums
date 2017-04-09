@@ -134,7 +134,7 @@ public class AdminController {
             return ApiResponse.entryNotFound();
         }
         threadDao.delete(thread);
-        return ApiResponse.ok(thread);
+        return ApiResponse.ok(thread.getId());
     }
 
     @Transactional
@@ -148,7 +148,7 @@ public class AdminController {
             return ApiResponse.entryNotFound();
         }
         postDao.delete(post);
-        return ApiResponse.ok(post);
+        return ApiResponse.ok(post.getId());
     }
 
     @Transactional
