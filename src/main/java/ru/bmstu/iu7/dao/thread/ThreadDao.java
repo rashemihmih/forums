@@ -6,5 +6,5 @@ import ru.bmstu.iu7.dao.forum.Forum;
 import java.util.List;
 
 public interface ThreadDao extends Dao<Thread> {
-    List<Thread> list(Forum forum, int offset, int limit);
+    List<Thread> list(int forumId, int offset, int limit);
 }

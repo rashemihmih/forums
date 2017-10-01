@@ -3,7 +3,6 @@ package ru.bmstu.iu7;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import ru.bmstu.iu7.dao.forum.Forum;
 import ru.bmstu.iu7.dao.thread.Thread;
 import ru.bmstu.iu7.dao.thread.ThreadDao;
 
@@ -16,10 +15,15 @@ public class ThreadDaoTest extends DaoTest {
     @Autowired
     private ThreadDao threadDao;
 
-    @Test
-    public void createThread() {
+    @Override
+    public void init() {
+        super.init();
         databaseService.addUser("Vasya", "123");
         databaseService.addForum("Forum");
+    }
+
+    @Test
+    public void createThread() {
         Date date = new Date();
         String title = "Hello";
         String message = "Hi";
@@ -37,9 +41,6 @@ public class ThreadDaoTest extends DaoTest {
 
     @Test
     public void listThreads() {
-        databaseService.addUser("Vasya", "123");
-        Forum forum = new Forum(1, "Forum");
-        databaseService.addForum(forum.getTitle());
         Date date1 = new Date(1000);
         Date date2 = new Date(2000);
         Date date3 = new Date(3000);
@@ -56,7 +57,7 @@ public class ThreadDaoTest extends DaoTest {
         databaseService.addThread(1, title2, message2, 1, date2);
         databaseService.addThread(1, title3, message3, 1, date3);
         databaseService.addThread(1, title4, message4, 1, date4);
-        List<Thread> threads = threadDao.list(forum, 1, 2);
+        List<Thread> threads = threadDao.list(1, 1, 2);
         assertEquals(2, threads.size());
         assertEquals(title3, threads.get(0).getTitle());
         assertEquals(message3, threads.get(0).getMessage());
@@ -66,8 +67,6 @@ public class ThreadDaoTest extends DaoTest {
 
     @Test
     public void deleteThread() {
-        databaseService.addUser("Vasya", "123");
-        databaseService.addForum("Forum");
         databaseService.addThread(1, "Hello", "Hi", 1);
         threadDao.delete(new Thread(1, 0, "", "", 0, new Date(), new Date()));
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("SELECT * FROM thread;");
@@ -76,8 +75,6 @@ public class ThreadDaoTest extends DaoTest {
 
     @Test
     public void getThread() {
-        databaseService.addUser("Vasya", "123");
-        databaseService.addForum("Forum");
         String title = "Hello";
         String message = "Hi";
         databaseService.addThread(1, title, message, 1);

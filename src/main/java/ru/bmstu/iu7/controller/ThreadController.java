@@ -94,7 +94,7 @@ public class ThreadController {
             return ApiResponse.entryNotFound();
         }
         List<ThreadResponse> responses = new ArrayList<>();
-        for (Thread thread : threadDao.list(forumEntity, offset, limit)) {
+        for (Thread thread : threadDao.list(forumEntity.getId(), offset, limit)) {
             String user = userDao.get(thread.getUserId()).getLogin();
             responses.add(new ThreadResponse(thread.getId(), forum, thread.getTitle(), thread.getMessage(), user,
                     DateUtils.format(thread.getCreationTime()), DateUtils.format(thread.getLastUpdate())));

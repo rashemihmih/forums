@@ -16,7 +16,7 @@ public abstract class DaoTest {
     protected DatabaseService databaseService;
 
     @Before
-    public void clear() {
+    public void init() {
         databaseService.clear();
     }
 }

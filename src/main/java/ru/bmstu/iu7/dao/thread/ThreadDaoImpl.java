@@ -20,11 +20,11 @@ public class ThreadDaoImpl extends BaseDao<Thread> implements ThreadDao {
     }
 
     @Override
-    public List<Thread> list(Forum forum, int offset, int limit) {
+    public List<Thread> list(int forumId, int offset, int limit) {
         return jdbcTemplate.query("SELECT * FROM thread JOIN " +
                         "(SELECT id FROM thread WHERE forum_id = ? ORDER BY last_update DESC LIMIT ?, ?) t " +
                         "ON thread.id = t.id ORDER BY thread.last_update DESC;",
-                new ThreadRowMapper(), forum.getId(), offset, limit);
+                new ThreadRowMapper(), forumId, offset, limit);
     }
 
     @Override
