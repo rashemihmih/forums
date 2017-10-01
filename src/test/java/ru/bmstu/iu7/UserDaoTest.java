@@ -1,33 +1,17 @@
 package ru.bmstu.iu7;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.test.context.junit4.SpringRunner;
 import ru.bmstu.iu7.dao.user.User;
 import ru.bmstu.iu7.dao.user.UserDao;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class UserDaoTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private DatabaseService databaseService;
+public class UserDaoTest extends DaoTest {
     @Autowired
     private UserDao userDao;
-
-    @Before
-    public void clear() {
-        databaseService.clear();
-    }
 
     @Test
     public void getNonExistingUserById() {

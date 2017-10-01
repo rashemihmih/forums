@@ -1,28 +1,15 @@
 package ru.bmstu.iu7;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import ru.bmstu.iu7.dao.admin.Admin;
 import ru.bmstu.iu7.dao.admin.AdminDao;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class AdminDaoTest {
-    @Autowired
-    private DatabaseService databaseService;
+public class AdminDaoTest extends DaoTest {
     @Autowired
     private AdminDao adminDao;
-
-    @Before
-    public void clear() {
-        databaseService.clear();
-    }
 
     @Test
     public void getNonExistingAdmin() {
