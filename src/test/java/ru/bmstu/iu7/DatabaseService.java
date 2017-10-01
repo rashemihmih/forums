@@ -46,6 +46,11 @@ public class DatabaseService {
                 "(?, ?, ?, ?, NOW())", userId, message, threadId, parent);
     }
 
+    public void addPost(int userId, String message, int threadId, int parent, Date date) {
+        jdbcTemplate.update("INSERT INTO post (user_id, message, thread_id, parent, creation_time) VALUES " +
+                "(?, ?, ?, ?, ?)", userId, message, threadId, parent, DateUtils.format(date));
+    }
+
     public void addAdmin(String login, String password) {
         jdbcTemplate.update("INSERT INTO admin (login, passwd) VALUES (?, ?);", login, password);
     }
