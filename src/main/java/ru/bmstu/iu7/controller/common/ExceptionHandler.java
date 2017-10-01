@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main.controller.common;
+package ru.bmstu.iu7.controller.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

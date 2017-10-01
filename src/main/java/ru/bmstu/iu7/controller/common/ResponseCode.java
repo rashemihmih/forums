@@ -1,6 +1,6 @@
-package ru.bmstu.iu7.main.controller.common;
+package ru.bmstu.iu7.controller.common;
 
-public enum  ResponseCode {
+public enum ResponseCode {
     OK(0, "OK"),
     INCORRECT_REQUEST(1, "Некорректный запрос"),
     AUTH_ERROR(2, "Ошибка авторизации"),

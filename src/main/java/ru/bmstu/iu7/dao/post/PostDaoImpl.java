@@ -6,7 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.bmstu.iu7.dao.BaseDao;
-import ru.bmstu.iu7.main.utils.DateUtils;
+import ru.bmstu.iu7.utils.DateUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
@@ -56,7 +56,7 @@ public class PostDaoImpl extends BaseDao<Post> implements PostDao {
     public List<Post> list(int thread, int offset, int limit, boolean desc) {
         String order = desc ? "DESC" : "";
         return jdbcTemplate.query("SELECT * FROM post JOIN " +
-                        "(SELECT id FROM post WHERE thread_id = ? ORDER BY id " + order +" LIMIT ?, ?) p " +
+                        "(SELECT id FROM post WHERE thread_id = ? ORDER BY id " + order + " LIMIT ?, ?) p " +
                         "ON post.id = p.id ORDER BY post.id " + order + ';',
                 new PostRowMapper(), thread, offset, limit);
     }

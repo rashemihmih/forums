@@ -1,19 +1,19 @@
-package ru.bmstu.iu7.main.controller;
+package ru.bmstu.iu7.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import ru.bmstu.iu7.controller.common.ApiResponse;
+import ru.bmstu.iu7.controller.common.SessionService;
+import ru.bmstu.iu7.controller.common.ThreadResponse;
 import ru.bmstu.iu7.dao.forum.Forum;
 import ru.bmstu.iu7.dao.forum.ForumDao;
 import ru.bmstu.iu7.dao.thread.Thread;
 import ru.bmstu.iu7.dao.thread.ThreadDao;
 import ru.bmstu.iu7.dao.user.User;
 import ru.bmstu.iu7.dao.user.UserDao;
-import ru.bmstu.iu7.main.controller.common.ApiResponse;
-import ru.bmstu.iu7.main.controller.common.SessionService;
-import ru.bmstu.iu7.main.controller.common.ThreadResponse;
-import ru.bmstu.iu7.main.utils.DateUtils;
+import ru.bmstu.iu7.utils.DateUtils;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;

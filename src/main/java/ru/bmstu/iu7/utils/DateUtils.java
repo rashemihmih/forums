@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main.utils;
+package ru.bmstu.iu7.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

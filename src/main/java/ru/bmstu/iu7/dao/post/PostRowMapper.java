@@ -10,7 +10,7 @@ public class PostRowMapper implements DaoEntityRowMapper<Post> {
     @Override
     public Post mapRow(ResultSet resultSet, int i) throws SQLException {
         int id = resultSet.getInt("id");
-        int userId =resultSet.getInt("user_id");
+        int userId = resultSet.getInt("user_id");
         String message = resultSet.getString("message");
         int threadId = resultSet.getInt("thread_id");
         int parent = resultSet.getInt("parent");

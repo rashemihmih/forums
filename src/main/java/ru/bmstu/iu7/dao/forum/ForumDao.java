@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ForumDao extends Dao<Forum> {
     Forum get(String title);
+
     List<Forum> list();
 }

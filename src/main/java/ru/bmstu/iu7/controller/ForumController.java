@@ -1,13 +1,13 @@
-package ru.bmstu.iu7.main.controller;
+package ru.bmstu.iu7.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import ru.bmstu.iu7.controller.common.ApiResponse;
+import ru.bmstu.iu7.controller.common.SessionService;
 import ru.bmstu.iu7.dao.forum.Forum;
 import ru.bmstu.iu7.dao.forum.ForumDao;
-import ru.bmstu.iu7.main.controller.common.ApiResponse;
-import ru.bmstu.iu7.main.controller.common.SessionService;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;

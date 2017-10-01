@@ -1,4 +1,4 @@
-package ru.bmstu.iu7.main.controller.common;
+package ru.bmstu.iu7.controller.common;
 
 import org.springframework.stereotype.Service;
 import ru.bmstu.iu7.dao.admin.Admin;
