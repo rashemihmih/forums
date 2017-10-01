@@ -14,8 +14,7 @@ public class AdminDaoImpl extends BaseDao<Admin> implements AdminDao {
 
     @Override
     public void create(Admin entity) {
-        jdbcTemplate.update("INSERT INTO admin (login, passwd) VALUES (?, ?);", entity.getLogin(),
-                entity.getPassword());
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -30,8 +29,7 @@ public class AdminDaoImpl extends BaseDao<Admin> implements AdminDao {
 
     @Override
     public Admin get(int id) {
-        List<Admin> list = jdbcTemplate.query("SELECT * FROM admin WHERE id = ?;", new AdminRowMapper(), id);
-        return list.isEmpty() ? null : list.get(0);
+        throw new UnsupportedOperationException();
     }
 
     @Override
