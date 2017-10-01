@@ -25,7 +25,7 @@ public class AdminDaoTest {
     }
 
     @Test
-    public void getNonExistingAdminByLogin() {
+    public void getNonExistingAdmin() {
         assertNull(adminDao.get("Admin"));
     }
 

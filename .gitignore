@@ -1,6 +1,6 @@
 target
 .idea
 .mvn
-forums.iml
+*.iml
 mvnw
 mvnw.cmd
