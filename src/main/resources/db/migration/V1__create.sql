@@ -14,7 +14,7 @@ CREATE TABLE forum (
 CREATE TABLE thread (
   id            INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   forum_id      INT                NOT NULL,
-  title         VARCHAR(100)        NOT NULL,
+  title         VARCHAR(100)       NOT NULL,
   message       TEXT               NOT NULL,
   user_id       INT                NOT NULL,
   creation_time DATETIME           NOT NULL,
