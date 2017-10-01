@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.bmstu.iu7.dao.BaseDao;
-import ru.bmstu.iu7.dao.forum.Forum;
 import ru.bmstu.iu7.utils.DateUtils;
 
 import java.sql.PreparedStatement;

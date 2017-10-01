@@ -37,7 +37,7 @@ public class DatabaseService {
 
     public void addThread(int forumId, String title, String message, int userId, Date date) {
         jdbcTemplate.update("INSERT INTO thread (forum_id, title, message, user_id, creation_time, last_update) " +
-                "VALUES (?, ?, ?, ?, ?, ?);", forumId, title, message, userId, DateUtils.format(date),
+                        "VALUES (?, ?, ?, ?, ?, ?);", forumId, title, message, userId, DateUtils.format(date),
                 DateUtils.format(date));
     }
 
