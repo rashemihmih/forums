@@ -16,8 +16,6 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class AdminDaoTest {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
     private DatabaseService databaseService;
     @Autowired
     private AdminDao adminDao;
