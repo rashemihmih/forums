@@ -24,7 +24,7 @@ public class UserDaoTest extends DaoTest {
     }
 
     @Test
-    public void getExistingUserById() {
+    public void getUserById() {
         String login = "Vasya";
         String password = "123";
         databaseService.addUser(login, password);
@@ -36,7 +36,7 @@ public class UserDaoTest extends DaoTest {
     }
 
     @Test
-    public void getExistingUserByName() {
+    public void getUserByLogin() {
         String login = "Vasya";
         String password = "123";
         databaseService.addUser(login, password);
