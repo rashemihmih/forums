@@ -35,6 +35,12 @@ public class DatabaseService {
                 "VALUES (?, ?, ?, ?, NOW(), NOW());", forumId, title, message, userId);
     }
 
+    public void addThread(int forumId, String title, String message, int userId, Date date) {
+        jdbcTemplate.update("INSERT INTO thread (forum_id, title, message, user_id, creation_time, last_update) " +
+                "VALUES (?, ?, ?, ?, ?, ?);", forumId, title, message, userId, DateUtils.format(date),
+                DateUtils.format(date));
+    }
+
     public void addPost(int userId, String message, int threadId, int parent) {
         jdbcTemplate.update("INSERT INTO post (user_id, message, thread_id, parent, creation_time) VALUES " +
                 "(?, ?, ?, ?, NOW())", userId, message, threadId, parent);
