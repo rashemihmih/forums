@@ -3,6 +3,9 @@ package ru.bmstu.iu7;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.bmstu.iu7.utils.DateUtils;
+
+import java.util.Date;
 
 @Service
 public class DatabaseService {
@@ -39,22 +42,5 @@ public class DatabaseService {
 
     public void addAdmin(String login, String password) {
         jdbcTemplate.update("INSERT INTO admin (login, passwd) VALUES (?, ?);", login, password);
-    }
-
-    public void addUsers() {
-        addUser("Albert", "123");
-        addUser("Boris", "1231241");
-        addUser("Cane", "awqdqw");
-        addUser("Deborah", "gfgfgfg");
-        addUser("Edward", "sgsdg");
-        addUser("Frank", "42342");
-    }
-
-    public void addForums() {
-        addForum("Auto");
-        addForum("Music");
-        addForum("Films");
-        addForum("Video Games");
-        addForum("Sports");
     }
 }
